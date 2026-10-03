@@ -1,10 +1,4 @@
-"""Unit tests for the streaming parsing engine.
-
-Fixtures are written to `tmp_path` as real files rather than mocked in
-memory, because the thing under test is specifically the file-streaming
-behavior (ijson reading from disk) — mocking that away would test
-nothing.
-"""
+"""Tests for the streaming parsing engine."""
 
 from __future__ import annotations
 
@@ -24,7 +18,9 @@ def _write_followers(path: Path, usernames: list[str]) -> None:
         {
             "title": "",
             "media_list_data": [],
-            "string_list_data": [{"href": f"https://instagram.com/{u}", "value": u, "timestamp": 1690000000}],
+            "string_list_data": [
+                {"href": f"https://instagram.com/{u}", "value": u, "timestamp": 1690000000}
+            ],
         }
         for u in usernames
     ]
@@ -37,7 +33,9 @@ def _write_following(path: Path, usernames: list[str]) -> None:
             {
                 "title": "",
                 "media_list_data": [],
-                "string_list_data": [{"href": f"https://instagram.com/{u}", "value": u, "timestamp": 1690000000}],
+                "string_list_data": [
+                    {"href": f"https://instagram.com/{u}", "value": u, "timestamp": 1690000000}
+                ],
             }
             for u in usernames
         ]
@@ -57,7 +55,6 @@ class TestAnalyzeRelationships:
         assert result.followers_count == 3
         assert result.following_count == 3
         assert result.not_following_back == ["diego"]
-        # 2 of 3 followed accounts follow back -> 66.67%
         assert result.reciprocity_percentage == pytest.approx(66.67, abs=0.01)
 
     def test_full_reciprocity_when_everyone_follows_back(self, tmp_path: Path) -> None:
@@ -89,6 +86,15 @@ class TestLoadFollowers:
         with pytest.raises(CorruptedJSONError):
             load_followers(path)
 
+    def test_malformed_record_raises_domain_error(self, tmp_path: Path) -> None:
+        path = tmp_path / "followers_1.json"
+        path.write_text(
+            json.dumps([{"title": "", "string_list_data": [{"value": ""}]}]),
+            encoding="utf-8",
+        )
+        with pytest.raises(InvalidExportFormatError, match="invalid relationship record"):
+            load_followers(path)
+
 
 class TestLoadFollowing:
     def test_wrong_top_level_key_raises_unsupported_version(self, tmp_path: Path) -> None:
@@ -117,6 +123,13 @@ class TestStreamCountEngagements:
     def test_missing_file_raises(self, tmp_path: Path) -> None:
         with pytest.raises(InvalidExportFormatError):
             stream_count_engagements(tmp_path / "missing.json")
+
+    def test_non_object_record_raises_domain_error(self, tmp_path: Path) -> None:
+        path = tmp_path / "liked_posts.json"
+        path.write_text(json.dumps([{"title": "ana"}, "bad"]), encoding="utf-8")
+
+        with pytest.raises(InvalidExportFormatError, match="each engagement record"):
+            stream_count_engagements(path)
 
 
 class TestStringListEntryValidation:
