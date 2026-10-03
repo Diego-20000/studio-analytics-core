@@ -4,8 +4,7 @@ A small, fully-tested reference implementation of the core parsing
 architecture behind **Studio Analytics**, an Android app that analyzes a
 user's official Instagram data export entirely on-device.
 
-This repository is **not** the commercial app. It's a distilled,
-open-source whitepaper: the same architectural decisions — streaming
+This repository is **not** the commercial app. It is a small, public reference project: the same architectural decisions — streaming
 JSON parsing, strict data contracts, a local-only execution model — 
 reimplemented from scratch in Python so the design can be read,
 run, and tested by anyone without needing an Android toolchain or
@@ -75,7 +74,7 @@ Three modules, three responsibilities:
 
 ## Privacy by design, not by policy
 
-The production app's non-negotiable rule is that **no Instagram data —
+The product's non-negotiable rule is that **no Instagram data —
 followers, likes, activity, audience — ever leaves the user's device.**
 That constraint is what shaped every decision here, and it's directly
 visible in the code, not just asserted in a privacy policy:
@@ -91,7 +90,7 @@ visible in the code, not just asserted in a privacy policy:
 - Errors carry file paths and reasons, never record contents, so even
   crash logs can't leak user data.
 
-## A validated business model, not a hypothesis
+## A product decision worth showing
 
 The production app ships as a one-time purchase (no subscription), with
 a 7-day trial and refunds handled entirely by the platform's billing
