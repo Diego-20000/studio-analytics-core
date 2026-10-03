@@ -1,15 +1,10 @@
 # studio-analytics-core
 
-A small, fully-tested reference implementation of the core parsing
-architecture behind **Studio Analytics**, an Android app that analyzes a
-user's official Instagram data export entirely on-device.
+A small, fully-tested public reference implementation of one part of the architecture behind **Studio Analytics**: parsing official Instagram exports locally and incrementally.
 
-This repository is **not** the commercial app. It's a distilled,
-open-source whitepaper: the same architectural decisions — streaming
-JSON parsing, strict data contracts, a local-only execution model — 
-reimplemented from scratch in Python so the design can be read,
-run, and tested by anyone without needing an Android toolchain or
-access to proprietary code.
+This is a **companion reference to the Android app**, not a second product or the source repository. The main application is [Diego-20000/studio-analytics-app](https://github.com/Diego-20000/studio-analytics-app). The supporting remote-config/feedback service lives in [Diego-20000/studio-analytics-api](https://github.com/Diego-20000/studio-analytics-api), and APK releases are published in [Diego-20000/studio-analytics-releases](https://github.com/Diego-20000/studio-analytics-releases).
+
+The implementation here is intentionally smaller and independent of the Android project: it isolates the parsing and validation decisions that are useful to inspect, test and reuse as an engineering reference.
 
 ## The problem
 
@@ -75,7 +70,7 @@ Three modules, three responsibilities:
 
 ## Privacy by design, not by policy
 
-The production app's non-negotiable rule is that **no Instagram data —
+The product's non-negotiable rule is that **no Instagram data —
 followers, likes, activity, audience — ever leaves the user's device.**
 That constraint is what shaped every decision here, and it's directly
 visible in the code, not just asserted in a privacy policy:
@@ -91,17 +86,9 @@ visible in the code, not just asserted in a privacy policy:
 - Errors carry file paths and reasons, never record contents, so even
   crash logs can't leak user data.
 
-## A validated business model, not a hypothesis
+## Relationship to the main project
 
-The production app ships as a one-time purchase (no subscription), with
-a 7-day trial and refunds handled entirely by the platform's billing
-system. That choice came out of direct user feedback during beta
-testing, not a default template — users of a privacy-focused, one-shot
-analysis tool responded better to "pay once, own it" than to a
-recurring subscription for something they might run a handful of times.
-It's a small example of the same principle applied to product decisions
-as to architecture: prefer the option that's simplest to reason about
-and easiest to trust.
+The Android app contains the product UI, ZIP import flow and the broader analysis features. This repository keeps only a focused Python reference of the parsing architecture, so the two should not be treated as interchangeable codebases.
 
 ## Running it
 

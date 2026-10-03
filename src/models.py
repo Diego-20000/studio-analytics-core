@@ -86,7 +86,7 @@ class EngagementSummary(BaseModel):
     total_events: int
     unique_targets: int
     raw_bytes_processed: int = Field(
-        description="Bytes read from the source stream; useful for throughput logging."
+        description="Size in bytes of the source file."
     )
 
 
