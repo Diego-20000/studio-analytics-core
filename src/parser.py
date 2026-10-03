@@ -101,7 +101,7 @@ def stream_count_engagements(path: Path, record_path: str = "item") -> Engagemen
                 title = entry.get("title")
                 if isinstance(title, str) and title.strip():
                     targets.add(title.strip())
-            bytes_read = fh.bytes_read
+            bytes_read = path.stat().st_size
     except ijson.JSONError as exc:
         raise CorruptedJSONError(str(path), exc) from exc
 
