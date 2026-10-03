@@ -4,7 +4,7 @@ A small, fully-tested reference implementation of the core parsing
 architecture behind **Studio Analytics**, an Android app that analyzes a
 user's official Instagram data export entirely on-device.
 
-This repository is **not** the commercial app. It is a small, public reference project: the same architectural decisions — streaming
+This repository is **not** the commercial app. It is a small public reference project: the same architectural decisions — streaming
 JSON parsing, strict data contracts, a local-only execution model — 
 reimplemented from scratch in Python so the design can be read,
 run, and tested by anyone without needing an Android toolchain or
